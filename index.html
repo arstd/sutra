@@ -9,33 +9,55 @@
     <style>
         body {
             font-weight: normal;
-            font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+            font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
         }
+
         h3,
         h4 {
             text-align: center;
         }
+
         s {
             text-decoration: none;
             display: inline-block;
             text-align: center;
         }
-        a {
+
+        s a {
             margin: 0 0.1rem;
             display: block;
             color: #c3c3c3;
         }
-        b {
+
+        s b {
             display: block;
         }
+
         .right {
             text-align: right;
         }
+
         select {
             font-size: inherit;
         }
+
         .hide {
             display: none;
+        }
+
+        .page {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .page a {
+            display: inline-block;
+            margin: 0 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        .page a.gray {
+            color: #a6a6a6;
+            cursor: not-allowed;
         }
     </style>
 
@@ -57,13 +79,16 @@
         </div>
         <h3>{{title}}<h3>
         <h4>{{alias}}</h4>
-        <template v-for="(c, i) in content" :key="i">
-            <br v-if="c.w==='\n'">
+        <template v-for="(g, i) in content" :key="i">
+            <br v-if="g.c==='\n'">
             <s v-else>
-                <a :class="{'hide': !show}">{{c.p===c.w ? '' : c.p}}</a>
-                <b>{{c.w}}</b>
+                <a :class="{'hide': !show}">{{g.p===g.c ? '' : g.p}}</a>
+                <b>{{g.c}}</b>
             </s>
         </template>
+        <div class="page">
+            <a v-for="(v, i) in sections" :disabled="section>=i" :class="{'gray': section>=i}" @click="page(i)">{{i+1}}</a>
+        </div>
     </div>
 
     <script>
@@ -89,11 +114,23 @@
             ],
             title: '',
             alias: '',
-            content: []
+            sections: [],
+            groups: [],
+            per: 2000,
+            content: [],
+            section: -1
+        },
+        mounted() {
+            this.name = 'dabfuz'
+            this.change()
         },
         methods: {
+            page(i) {
+                if (this.section >= i) return
+                this.section = i
+                this.content = this.groups.slice(0, this.per*(this.section+1))
+            },
             change() {
-                console.log(this.name)
                 axios.all([
                     axios.get(`data/${this.name}/info.json`),
                     axios.get(`data/${this.name}/chars.txt`),
@@ -102,16 +139,25 @@
                     this.title = info.data.title
                     this.alias = info.data.alias
 
-                    let ws = chars.data.trim().split('').filter(p=>p!=' ')
+                    this.section = -1
+                    this.groups = []
 
-                    let tmp = pinyins.data.trim().replace(/[。，、,.]/g, ' $& ')
-                    let ps = tmp.split(/[ \t\r\n]/).filter(p=>p!=' '&&p!='')
+                    let patt = /[a-zāáǎàēéěèīíǐìōóǒòūúǔùüǖǘǚǜA-Z]+/g
+                    for (let c of chars.data) {
+                        let g = { c: c, p: ''}
 
-                    let co = new Array(ws.length)
-                    for (let i=j=0; i<ws.length; i++) {
-                        co[i] = {p: ws[i] === '\n' ? '' :(ps[j++]||''), w: ws[i]}
+                        if (c >= '\u{4E00}' && c <= '\u{9FA5}') {
+                            let m = patt.exec(pinyins.data)
+                            if (m != null) {
+                                g.p = m[0]
+                            }
+                        }
+                        this.groups.push(g)
                     }
-                    this.content = co
+
+                    this.sections = new Array(Math.ceil(this.groups.length / this.per))
+
+                    this.page(0)
                 })).catch(err=>{
                     console.log(err)
                 })
