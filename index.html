@@ -7,6 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>阿弥陀佛～～～</title>
     <style>
+        body {
+            font-weight: normal;
+            font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+        }
         h3,
         h4 {
             text-align: center;
@@ -34,6 +38,9 @@
         select {
             font-size: inherit;
         }
+        .hide {
+            display: none;
+        }
     </style>
 
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
@@ -44,18 +51,20 @@
 
 <body>
     <div id="sutra">
-        <div class="right">
+        <div>
+            <label for="select">选择经文：</label>
             <select id="select" v-model="name" @change="change">
-                <option value="">选择经文</option>
                 <option v-for="s in sutras" :value="s.name">{{s.title}}</option>
             </select>
+            <input id="check" type="checkbox" v-model="show" v-bind:true-value="true" v-bind:false-value="false">
+            <label for="check">显示拼音</label>
         </div>
         <h3>{{title}}<h3>
         <h4>{{alias}}</h4>
         <template v-for="(c, i) in content" :key="i">
             <br v-if="c.w==='\n'">
             <s v-else>
-                <a>{{c.p===c.w ? '' : c.p}}</a>
+                <a :class="{'hide': !show}">{{c.p===c.w ? '' : c.p}}</a>
                 <b>{{c.w}}</b>
             </s>
         </template>
@@ -66,6 +75,7 @@
         el: '#sutra',
         data: {
             name: '',
+            show: true,
             sutras: [
                 {
                     "name": "dabfuz",
