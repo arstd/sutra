@@ -5,140 +5,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>佛经</title>
+    <title>阿弥陀佛～～～</title>
     <style>
+        h3,
+        h4 {
+            text-align: center;
+        }
+
         s {
             text-decoration: none;
             display: inline-block;
             margin-right: 0.25rem;
             text-align: center;
         }
+
         a {
             display: block;
             color: #a4a4a4;
         }
+
         b {
             display: block;
             color: #3e3e3e;
         }
+        .right {
+            text-align: right;
+        }
+        select {
+            font-size: inherit;
+        }
     </style>
+
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script src="//cdn.bootcss.com/axios/0.15.3/axios.min.js"></script>
     <script src="vue.min.js"></script>
+    <script src="axios.min.js"></script>
 </head>
 
 <body>
     <div id="sutra">
+        <div class="right">
+            <select id="select" v-model="name" @change="change">
+                <option value="">选择经文</option>
+                <option v-for="s in sutras" :value="s.name">{{s.title}}</option>
+            </select>
+        </div>
         <h3>{{title}}<h3>
-        <h4>{{subtitle}}</h4>
+        <h4>{{alias}}</h4>
         <template v-for="(c, i) in content" :key="i">
             <br v-if="c.w==='\n'">
             <s v-else>
-                <a>{{c.p}}</a>
+                <a>{{c.p===c.w ? '' : c.p}}</a>
                 <b>{{c.w}}</b>
             </s>
         </template>
     </div>
 
     <script>
-        new Vue({
-            el: '#sutra',
-            data: {
-                    title: '大悲咒',
-                    subtitle: '千手千眼无碍大悲心陀罗尼',
-                    content: [],
-                    chars: `南无喝啰怛那、哆啰夜耶。
-南无阿唎耶，婆卢羯帝、烁钵啰耶。
-   菩提萨埵婆耶。
-   摩诃萨埵婆耶。
-   摩诃迦卢尼迦耶。
-唵，萨皤啰罚曳。数怛那怛写。
-南无悉吉栗埵、伊蒙阿唎耶。
-   婆卢吉帝、室佛啰愣驮婆。
-南无那啰谨墀。
-   酰利摩诃、皤哆沙咩。
-   萨婆阿他、豆输朋，阿逝孕。
-   萨婆萨哆、那摩婆萨哆，
-   那摩婆伽，摩罚特豆。怛侄他。
-唵，阿婆卢酰。卢迦帝。迦罗帝。夷酰唎。
-摩诃菩提萨埵，萨婆萨婆。
-   摩啰摩啰，摩酰摩酰、唎驮孕。
-   俱卢俱卢、羯蒙。
-   度卢度卢、罚阇耶帝。
-摩诃罚阇耶帝。陀啰陀啰。地唎尼。
-   室佛啰耶。遮啰遮啰。摩么罚摩啰。穆帝隶。
-   伊酰伊酰。室那室那。阿啰参、佛啰舍利。
-                  罚沙罚参。佛啰舍耶。
-   呼嚧呼嚧摩啰。呼嚧呼嚧酰利。
-   娑啰娑啰，悉唎悉唎，苏嚧苏嚧。
-   菩提夜、菩提夜。菩驮夜、菩驮夜。
-   弥帝唎夜。那啰谨墀。地利瑟尼那。
-波夜摩那。娑婆诃。
-悉陀夜。娑婆诃。
-摩诃悉陀夜。娑婆诃。
-悉陀喻艺。室皤啰耶。娑婆诃。
-那啰谨墀。娑婆诃。
-摩啰那啰。娑婆诃。
-悉啰僧、阿穆佉耶。娑婆诃。
-娑婆摩诃、阿悉陀夜。娑婆诃。
-者吉啰、阿悉陀夜。娑婆诃。
-波陀摩、羯悉陀夜。娑婆诃。
-那啰谨墀、皤伽啰耶。娑婆诃。
-摩婆利、胜羯啰夜。娑婆诃。
-南无喝啰怛那、哆啰夜耶，
-南无阿唎耶。婆嚧吉帝。烁皤啰夜。娑婆诃。
-   唵，悉殿都。漫多啰。跋陀耶，娑婆诃。`,
-                   pinyins: `ná mó hē là dá nà、duō là yè ye。
-ná mó ē lì ye，pó lú jié dì、sāo bō là ye。
-      pú tí sà duǒ pó ye。
-      mó hē sà duǒ pó ye。
-      mó hē jiā lú ní jiā ye。
-ān，sà pán là fá ye。shuò dá nuó dá xiě。
-ná mó xī jí lì duǒ、yī méng ē lì ye。
-      pó lú jí dì、shì fó là lèng tuó pó。
-ná mó nuó là jǐn chí。
-xī lì mó hē、pán duō sā miē。
-sà pó ā tā、dòu shū péng，ā shì yùn。
-sà pó sà duō、nā mó pó sā duō，
-nà mó pó qié，mó fá tè dòu。dá zhí tuō。
-ān，ā pó lú xī。lú jiā dì。jiā là dì。yí xī lì。
-mó hē pú tí sà duǒ，sà pó sà pó。
-      mó là mó là，mó xī mó xī、lì tuó yùn。
-      jù lú jù lú、jié méng。
-      dù lú dù lú、fá shé yè dì。
-mó hē fá shé yè dì，tuó là tuó là。dì lì ní。
-      shì fó là ye，zhē là zhē là，mó mó fá mó là，mù dì lì。
-      yī xī yī xī。shì nuó shì nà。ā là shēn、fó là shé lì。
-                              fá shā fá shēn。fó là shé ye。
-      hū lú hū lú mó là。hū lú hū lú xī lì。
-      suō là suō là，xī lì xī lì，sū lú sū lú。
-      pú tí yè、pú tí yè。pú tuó yè、pú tuó yè。
-      mí dì lì yè。nà là jǐn chí。dì lì sè ní nà。
-bō yè mó nà。suō pó hē。
-xī tuó yè。suō pó hē。
-mó hē xī tuó yè。suō pó hē。
-xī tuó yù yì。shì pán là ye。suō pó hē。
-nà là jǐn chí。suō pó hē。
-mó nà nà là。suō pó hē。
-xi lú sēng、ā mù qué ye。suō pó hē。
-suō pó mó hē、ē xī tuó yè。suō pó hē。
-zhě jí là、ā xī tuó yè。suō pó hē。
-pō tuó mó、jí xī tuó yè。suō pó hē。
-ā là jǐn chí、pán qié là ye。suō pó hē。
-mó pó lì、shèng jié là yè。suō pó hē。
-ná mó hē là dá nà、duō là yè ye，
-ná mó ā lì ye。pó lú jié dì。suō bō là yè。suō pó hē。
-     ān，xī diàn dū。màn duō là。bá tuó ye，suō pó hē。`
-            },
-            created() {
-                let tmp = this.pinyins.trim().replace(/[。，、,.]/g, ' $& ')
-                let ps = tmp.split(/[ \t\r\n]/).filter(p=>p!=' '&&p!='')
-                let ws = this.chars.trim().split('').filter(p=>p!=' ')
-                let co = new Array(ws.length)
-                for (let i=j=0; i<ws.length; i++) {
-                    co[i] = {p: ws[i] === '\n' ? '' :(ps[j++]||''), w: ws[i]}
+    new Vue({
+        el: '#sutra',
+        data: {
+            name: '',
+            sutras: [
+                {
+                    "name": "dabfuz",
+                    "title": "大悲咒"
+                },{
+                    "name": "dizwpusabmygjd",
+                    "title": "地藏菩萨本愿经"
+                },{
+                    "name": "ggviyspusapummps",
+                    "title": "观世音菩萨普门品"
+                },{
+                    "name": "jsgwjd",
+                    "title": "金刚经"
                 }
-                this.content = co
+            ],
+            title: '',
+            alias: '',
+            content: []
+        },
+        methods: {
+            change() {
+                console.log(this.name)
+                axios.all([
+                    axios.get(`data/${this.name}/info.json`),
+                    axios.get(`data/${this.name}/chars.txt`),
+                    axios.get(`data/${this.name}/pinyins.txt`)
+                ]).then(axios.spread((info, chars, pinyins)=>{
+                    this.title = info.data.title
+                    this.alias = info.data.alias
+
+                    let ws = chars.data.trim().split('').filter(p=>p!=' ')
+
+                    let tmp = pinyins.data.trim().replace(/[。，、,.]/g, ' $& ')
+                    let ps = tmp.split(/[ \t\r\n]/).filter(p=>p!=' '&&p!='')
+
+                    let co = new Array(ws.length)
+                    for (let i=j=0; i<ws.length; i++) {
+                        co[i] = {p: ws[i] === '\n' ? '' :(ps[j++]||''), w: ws[i]}
+                    }
+                    this.content = co
+                })).catch(err=>{
+                    console.log(err)
+                })
             }
-        })
+        }
+    })
     </script>
 </body>
 
