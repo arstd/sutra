@@ -11,6 +11,7 @@
             text-decoration: none;
             display: inline-block;
             margin-right: 0.25rem;
+            text-align: center;
         }
         a {
             display: block;
@@ -21,13 +22,14 @@
             color: #3e3e3e;
         }
     </style>
+    <script src="vue.min.js"></script>
 </head>
 
 <body>
     <div id="sutra">
         <h3>{{title}}<h3>
         <h4>{{subtitle}}</h4>
-        <template v-for="(c, i) in content" key="i">
+        <template v-for="(c, i) in content" :key="i">
             <br v-if="c.w==='\n'">
             <s v-else>
                 <a>{{c.p}}</a>
@@ -35,7 +37,6 @@
             </s>
         </template>
     </div>
-    <script src="vue.min.js"></script>
 
     <script>
         new Vue({
@@ -109,7 +110,7 @@ mó hē fá shé yè dì，tuó là tuó là。dì lì ní。
                               fá shā fá shēn。fó là shé ye。
       hū lú hū lú mó là。hū lú hū lú xī lì。
       suō là suō là，xī lì xī lì，sū lú sū lú。
-      pú tí yè、pú tí yè，pú tuó yè、pú tuó yè。
+      pú tí yè、pú tí yè。pú tuó yè、pú tuó yè。
       mí dì lì yè。nà là jǐn chí。dì lì sè ní nà。
 bō yè mó nà。suō pó hē。
 xī tuó yè。suō pó hē。
@@ -125,7 +126,7 @@ pō tuó mó、jí xī tuó yè。suō pó hē。
 mó pó lì、shèng jié là yè。suō pó hē。
 ná mó hē là dá nà、duō là yè ye，
 ná mó ā lì ye。pó lú jié dì。suō bō là yè。suō pó hē。
-     ān，xī diàn dū。màn duō là。bá tuó ye，suō pó hē。     `
+     ān，xī diàn dū。màn duō là。bá tuó ye，suō pó hē。`
             },
             created() {
                 let tmp = this.pinyins.trim().replace(/[。，、,.]/g, ' $& ')
@@ -134,9 +135,7 @@ ná mó ā lì ye。pó lú jié dì。suō bō là yè。suō pó hē。
                 let co = new Array(ws.length)
                 for (let i=j=0; i<ws.length; i++) {
                     co[i] = {p: ws[i] === '\n' ? '' :(ps[j++]||''), w: ws[i]}
-                    console.log(JSON.stringify(co[i]))
                 }
-                console.log(co)
                 this.content = co
             }
         })
