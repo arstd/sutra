@@ -76,6 +76,9 @@
             </select>
             <input id="check" type="checkbox" v-model="show" v-bind:true-value="true" v-bind:false-value="false">
             <label for="check">显示拼音</label>
+            <select v-model="per" @change="perChange">
+                <option v-for="s in [1000,2000,3000,5000,10000]" :value="s">{{s}}</option>
+            </select>
         </div>
         <h3>{{title}}<h3>
         <h4>{{alias}}</h4>
@@ -116,7 +119,7 @@
             alias: '',
             sections: [],
             groups: [],
-            per: 2000,
+            per: 1000,
             content: [],
             section: -1
         },
@@ -129,6 +132,11 @@
                 if (this.section >= i) return
                 this.section = i
                 this.content = this.groups.slice(0, this.per*(this.section+1))
+            },
+            perChange() {
+                this.section = -1
+                this.sections = new Array(Math.ceil(this.groups.length / this.per))
+                this.page(0)
             },
             change() {
                 axios.all([
@@ -155,9 +163,7 @@
                         this.groups.push(g)
                     }
 
-                    this.sections = new Array(Math.ceil(this.groups.length / this.per))
-
-                    this.page(0)
+                    this.perChange()
                 })).catch(err=>{
                     console.log(err)
                 })
