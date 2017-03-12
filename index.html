@@ -8,8 +8,11 @@
     <title>阿弥陀佛</title>
     <style>
         body {
-            font-weight: normal;
+            font-weight:400;
+            font-size: 14px;
             font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background: rgba(255, 200, 0, 0.99);
+            color: #673ab7;
         }
 
         h3,
@@ -26,10 +29,10 @@
         s a {
             margin: 0 0.1rem;
             display: block;
-            color: #c3c3c3;
+            color: #4caf50;
         }
 
-        s b {
+        s t {
             display: block;
         }
 
@@ -86,7 +89,7 @@
             <br v-if="g.c==='\n'">
             <s v-else>
                 <a :class="{'hide': !show}">{{g.p===g.c ? '' : g.p}}</a>
-                <b>{{g.c}}</b>
+                <t>{{g.c}}</t>
             </s>
         </template>
         <div class="page">
