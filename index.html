@@ -42,6 +42,8 @@
 
         select {
             font-size: inherit;
+            background: transparent;
+            border: 0;
         }
 
         .hide {
@@ -73,15 +75,14 @@
 <body>
     <div id="sutra">
         <div>
-            <label for="select">选择经文：</label>
             <select id="select" v-model="name" @change="change">
                 <option v-for="s in sutras" :value="s.name">{{s.title}}</option>
             </select>
-            <input id="check" type="checkbox" v-model="show" v-bind:true-value="true" v-bind:false-value="false">
-            <label for="check">显示拼音</label>
             <select v-model="per" @change="perChange">
                 <option v-for="s in [1000,2000,3000,5000,10000]" :value="s">{{s}}</option>
             </select>
+            <input id="check" type="checkbox" v-model="show" v-bind:true-value="true" v-bind:false-value="false">
+            <label for="check">拼音</label>
         </div>
         <h3>{{title}}<h3>
         <h4>{{alias}}</h4>
